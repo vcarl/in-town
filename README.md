@@ -1,27 +1,31 @@
 # in-town
 
-An Effect-TS based REST API service paired with an Expo Android app for managing contacts with swipe functionality.
+A privacy-focused Expo Android app that helps you complete your personal contacts by swiping through them. Uses Effect-TS for a minimal backend ready for authentication.
 
 ## Overview
 
-This MVP allows you to swipe left/right on contacts to indicate whether you would visit them. Contacts that are swiped right are collected into a list and checked for profile completeness (birthday, address, relationship details, socials, etc.).
+This app helps you maintain a complete personal rolodex by:
+1. **Reading contacts from your Android device** - Your contacts never leave your device
+2. **Swiping left/right** - Quick decisions on who you'd like to visit
+3. **Tracking completeness** - See which contacts are missing key information (birthday, address, phone, email)
+4. **Storing locally** - All swipe decisions saved in device storage
+
+The app works **completely offline** for contact management. The backend is minimal, currently just providing health checks and ready for future authentication features.
 
 ## Project Structure
 
 ```
 in-town/
-├── server/          # Effect-TS backend with OpenAPI REST API
+├── server/          # Minimal Effect-TS backend (health check + future auth)
 │   ├── src/
-│   │   ├── api/         # API route handlers
-│   │   ├── layers/      # Effect-TS service layers
-│   │   ├── migrations/  # Database setup and seeds
-│   │   └── types/       # TypeScript type definitions
+│   │   ├── layers/      # Effect-TS service layers (database ready for auth)
+│   │   └── index.ts     # Server entry point
 │   └── package.json
-├── app/             # Expo React Native mobile app
+├── app/             # Expo React Native mobile app (Android-focused)
 │   ├── src/
-│   │   ├── components/  # Reusable UI components (SwipeCard)
-│   │   ├── screens/     # App screens (Swipe, ContactsList)
-│   │   ├── services/    # API client
+│   │   ├── components/  # SwipeCard component
+│   │   ├── screens/     # Swipe and ContactsList screens
+│   │   ├── services/    # Device contacts + local storage
 │   │   └── types/       # TypeScript types
 │   └── package.json
 └── package.json     # Root workspace configuration
@@ -29,138 +33,111 @@ in-town/
 
 ## Features
 
-### Backend (Effect-TS + OpenAPI)
-- **Effect-TS** for functional programming with composable services
-- **SQLite** database for contact storage
-- **OpenAPI** documentation available at `/openapi.json`
-- RESTful API endpoints:
-  - `GET /api/contacts` - Fetch all contacts
-  - `GET /api/contacts/:id` - Get specific contact
-  - `POST /api/contacts` - Create new contact
-  - `PUT /api/contacts/:id/swipe` - Update swipe status (left/right)
-  - `GET /api/contacts/swiped-right/list` - Get right-swiped contacts with completeness
-
-### Mobile App (Expo + React Native)
-- **Swipe functionality** using React Native Gesture Handler and Reanimated
-- **Two screens**:
-  - Swipe Screen: Swipe left (nope) or right (would visit) on contacts
-  - To Visit Screen: View right-swiped contacts with completeness indicators
-- **Completeness tracking** for:
+### Mobile App (Primary Focus)
+- **Device Contact Integration** using expo-contacts
+- **Swipe Interface** with React Native Gesture Handler and Reanimated
+- **Local Storage** via AsyncStorage for swipe decisions
+- **Two Screens**:
+  - Swipe Screen: Review contacts one by one
+  - To Visit Screen: See right-swiped contacts with completeness indicators
+- **Completeness Tracking** for:
   - Birthday
   - Home address
-  - Relationship details
-  - Social media profiles (Instagram, Twitter, Facebook)
+  - Phone number
+  - Email address
+
+### Backend (Minimal)
+- **Health Check** endpoint
+- **Kysely Database Layer** ready for future authentication tables
+- **Effect-TS** functional programming patterns
 
 ## Setup Instructions
 
 ### Prerequisites
 - Node.js 20+ and npm
-- For Android development: Android Studio with SDK
+- Android Studio with SDK 34 (for Android development)
+- Android device or emulator
 
 ### Installation
 
-1. **Clone the repository**
+1. **Clone and install**
    ```bash
    cd in-town
-   ```
-
-2. **Install dependencies**
-   ```bash
    npm install
    ```
 
-3. **Set up the server**
+2. **Start both server and app**
    ```bash
-   cd server
-   npm install
-   ```
-
-4. **Initialize the database with sample data**
-   ```bash
-   npm run db:migrate
-   ```
-   This will create the SQLite database and seed it with 5 sample contacts.
-
-5. **Set up the mobile app**
-   ```bash
-   cd ../app
-   npm install
-   ```
-
-### Running the Application
-
-1. **Start the backend server**
-   ```bash
-   cd server
    npm run dev
    ```
-   The server will run on http://localhost:3000
-
-2. **In a new terminal, start the Expo app**
-   ```bash
-   cd app
-   npm start
-   ```
+   This starts the backend server on port 3000 and the Expo development server.
 
 3. **Run on Android**
    - Press `a` in the Expo terminal to run on Android emulator
    - Or scan the QR code with Expo Go app on your Android device
-   - Note: If using a physical device, update the API URL in `app/src/services/api.ts` to your computer's IP address
 
-## API Documentation
+### Permissions
 
-Access the OpenAPI documentation at: http://localhost:3000/openapi.json
-
-### Example API Calls
-
-```bash
-# Get all contacts
-curl http://localhost:3000/api/contacts
-
-# Swipe right on a contact
-curl -X PUT http://localhost:3000/api/contacts/{id}/swipe \
-  -H "Content-Type: application/json" \
-  -d '{"status": "right"}'
-
-# Get all right-swiped contacts with completeness info
-curl http://localhost:3000/api/contacts/swiped-right/list
-```
+The app will request permission to access your contacts on first launch. This is required for the core functionality.
 
 ## Development
 
-### Server Development
+### Run Commands
+
 ```bash
-cd server
-npm run dev        # Start development server with hot reload
-npm run build      # Build for production
-npm run test       # Run tests
-npm run typecheck  # Type checking
+npm run dev          # Start both server and app
+npm run dev:server   # Start server only
+npm run dev:app      # Start Expo app only
+npm run build        # Build server
+npm run lint         # Lint all code
+npm run typecheck    # Type check all code
 ```
 
-### App Development
-```bash
-cd app
-npm start          # Start Expo dev server
-npm run android    # Run on Android
-npm run lint       # Lint code
-npm run typecheck  # Type checking
-```
+### Architecture Highlights
+
+**Device-First Design**
+- All contact data stays on your Android device
+- Swipe decisions stored in AsyncStorage (local to device)
+- No contact data sent to server
+- Works completely offline
+
+**Minimal Backend**
+- Currently just health check endpoint
+- Database layer using Kysely, ready for authentication
+- Effect-TS for functional composition
 
 ## Technology Stack
+
+### Mobile
+- **Expo SDK 54** - React Native framework
+- **expo-contacts** - Access device contacts
+- **AsyncStorage** - Local data persistence
+- **React Native Gesture Handler** - Swipe gestures
+- **React Native Reanimated** - 60fps animations
+- **TypeScript** - Type safety
 
 ### Backend
 - **Effect-TS** - Functional programming framework
 - **Express** - Web server
-- **SQLite** (better-sqlite3) - Database
+- **Kysely** - SQL query builder for future migrations
+- **SQLite** - Embedded database (for future auth)
 - **TypeScript** - Type safety
-- **Kysely** - SQL query builder
 
-### Mobile
-- **Expo** - React Native framework
-- **React Native Gesture Handler** - Gesture system
-- **React Native Reanimated** - Animation library
-- **TypeScript** - Type safety
-- **Axios** - HTTP client
+## Privacy
+
+- ✅ Contact data never leaves your device
+- ✅ Swipe decisions stored locally
+- ✅ No analytics or tracking
+- ✅ Open source
+
+## Future Enhancements
+
+Planned features (not in MVP):
+1. User authentication
+2. Cloud backup of swipe decisions (opt-in)
+3. Contact editing within app
+4. Reminder system for visits
+5. Notes on contacts
 
 ## License
 

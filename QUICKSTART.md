@@ -2,50 +2,34 @@
 
 ## Prerequisites
 - Node.js 20+ and npm
-- For Android: Android Studio with SDK 34
+- Android device or emulator
 
-## Setup (5 minutes)
+## Setup (2 minutes)
 
 ### 1. Install Dependencies
 ```bash
+cd in-town
 npm install
 ```
 
-### 2. Start the Backend
+### 2. Start Everything
 ```bash
-cd server
 npm run dev
 ```
-The server will start on http://localhost:3000
+This starts both the backend server (port 3000) and Expo development server.
 
-### 3. Seed the Database
-In a new terminal:
-```bash
-cd server
-npx tsx src/migrations/seed.ts
-```
-This creates 5 sample contacts.
+### 3. Run on Android
+Press `a` in the Expo terminal to open in Android emulator, or scan the QR code with Expo Go on your Android device.
 
-### 4. Test the API
-```bash
-curl http://localhost:3000/api/contacts
-```
-
-### 5. Start the Mobile App
-In a new terminal:
-```bash
-cd app
-npm start
-```
-
-Press `a` to open in Android emulator, or scan the QR code with Expo Go on your Android device.
+### 4. Grant Permissions
+On first launch, the app will request permission to access your contacts. Grant this permission to use the app.
 
 ## Usage
 
 ### Swipe Screen
 - **Swipe left**: Not interested in visiting this person
 - **Swipe right**: Would like to visit this person
-- Progress through all contacts
+- Progress through all your device contacts
 
 ### To Visit Screen
 - View all contacts you swiped right on
@@ -53,67 +37,33 @@ Press `a` to open in Android emulator, or scan the QR code with Expo Go on your 
 - Check which information is missing:
   - ✅ Birthday
   - ✅ Address  
-  - ✅ Relationship
-  - ✅ Socials (Instagram/Twitter/Facebook)
+  - ✅ Phone
+  - ✅ Email
 
-## API Endpoints
+## Data Storage
 
-```bash
-# Get all contacts
-GET http://localhost:3000/api/contacts
-
-# Get a specific contact
-GET http://localhost:3000/api/contacts/:id
-
-# Create a new contact
-POST http://localhost:3000/api/contacts
-Content-Type: application/json
-{
-  "name": "John Doe",
-  "birthday": "1990-01-01",
-  "address": "123 Main St",
-  "relationship": "Friend",
-  "phone": "+1-555-0100",
-  "email": "john@example.com",
-  "instagram": "@johndoe",
-  "twitter": null,
-  "facebook": null
-}
-
-# Update swipe status
-PUT http://localhost:3000/api/contacts/:id/swipe
-Content-Type: application/json
-{"status": "right"}  # or "left"
-
-# Get right-swiped contacts with completeness
-GET http://localhost:3000/api/contacts/swiped-right/list
-```
+- **Contacts**: Read from your Android device (never uploaded)
+- **Swipe decisions**: Stored locally in AsyncStorage on your device
+- **Privacy**: All data stays on your device
 
 ## Troubleshooting
 
-### Can't connect from physical device
-Update the API URL in `app/src/services/api.ts` to use your computer's IP:
-```typescript
-const API_BASE_URL = 'http://192.168.1.x:3000/api';
-```
+### Can't access contacts
+Make sure you granted contacts permission in Android settings:
+Settings > Apps > Expo Go > Permissions > Contacts
 
-### Port already in use
+### Server won't start
+Check if port 3000 is already in use:
 ```bash
 lsof -ti:3000 | xargs kill -9
 ```
 
-### Reset database
-```bash
-rm -f server/data/contacts.db
-cd server && npx tsx src/migrations/seed.ts
-```
-
 ## Development
 
-### Run tests
+### Run individual components
 ```bash
-cd server
-npm test
+npm run dev:server  # Backend only
+npm run dev:app     # Expo app only
 ```
 
 ### Type checking
