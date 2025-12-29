@@ -92,7 +92,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
           <Text style={styles.name}>{contact.name}</Text>
           
           <View style={styles.infoContainer}>
-            {contact.birthday && (
+            {contact.birthday?.month && contact.birthday?.day && (
               <View style={styles.infoRow}>
                 <Text style={styles.label}>Birthday:</Text>
                 <Text style={styles.value}>

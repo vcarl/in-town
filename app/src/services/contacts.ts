@@ -15,7 +15,7 @@ export const loadDeviceContacts = async (): Promise<Contact[]> => {
   const { status } = await Contacts.requestPermissionsAsync();
   
   if (status !== 'granted') {
-    throw new Error('Contacts permission not granted');
+    throw new Error('Permission to access contacts is required to use this feature. Please enable it in your device settings.');
   }
   
   const { data } = await Contacts.getContactsAsync({
@@ -33,7 +33,7 @@ export const loadDeviceContacts = async (): Promise<Contact[]> => {
     .filter(contact => contact.id !== undefined)
     .map(contact => ({
       ...contact,
-      id: contact.id!,
+      id: contact.id as string,
     }));
 };
 
@@ -86,7 +86,7 @@ export const mergeContactsWithSwipes = async (
 
 // Calculate contact completeness
 export const calculateCompleteness = (contact: Contact): ContactCompleteness => {
-  const hasBirthday = !!contact.birthday;
+  const hasBirthday = !!(contact.birthday?.month && contact.birthday?.day);
   const hasAddress = !!(contact.addresses && contact.addresses.length > 0);
   const hasPhone = !!(contact.phoneNumbers && contact.phoneNumbers.length > 0);
   const hasEmail = !!(contact.emails && contact.emails.length > 0);
