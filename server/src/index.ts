@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import { Effect, Layer } from 'effect';
+import { Effect } from 'effect';
 import { DatabaseServiceLive } from './layers/database.js';
 import { ContactsService } from './layers/contacts.js';
 import { createContactsRouter } from './api/contacts.js';
@@ -115,10 +115,8 @@ app.get('/openapi.json', (req, res) => {
 
 // Initialize Effect-TS layers and start server
 const main = Effect.gen(function* () {
-  console.log('Initializing database...');
-  const dbService = yield* DatabaseServiceLive;
+  console.log('Initializing services...');
   
-  console.log('Initializing contacts service...');
   const contactsService = yield* ContactsService;
   
   // Set up API routes
@@ -135,8 +133,6 @@ const main = Effect.gen(function* () {
       });
     });
   });
-  
-  return { dbService, contactsService };
 });
 
 // Run the program

@@ -1,18 +1,10 @@
-import { Effect } from 'effect';
+import { Effect, Layer } from 'effect';
 import { v4 as uuidv4 } from 'uuid';
-import type { DatabaseService } from '../layers/database.js';
+import { DatabaseService } from './database.js';
 import type { Contact, ContactCompleteness } from '../types/database.js';
 
-export interface ContactsService {
-  getAllContacts: () => Effect.Effect<Contact[], Error>;
-  getContact: (id: string) => Effect.Effect<Contact | null, Error>;
-  updateSwipeStatus: (id: string, status: 'left' | 'right') => Effect.Effect<Contact, Error>;
-  getSwipedRightContacts: () => Effect.Effect<ContactCompleteness[], Error>;
-  createContact: (contact: Omit<Contact, 'id' | 'created_at' | 'updated_at' | 'swipe_status'>) => Effect.Effect<Contact, Error>;
-}
-
 export const ContactsService = Effect.gen(function* () {
-  const { db } = yield* Effect.Tag<DatabaseService>();
+  const { db } = yield* DatabaseService;
   
   const getAllContacts = () =>
     Effect.try({

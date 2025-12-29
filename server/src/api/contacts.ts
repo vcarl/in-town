@@ -1,7 +1,14 @@
 import { Router, Request, Response } from 'express';
 import { Effect } from 'effect';
-import type { ContactsService } from '../layers/contacts.js';
 import type { Contact } from '../types/database.js';
+
+export interface ContactsService {
+  getAllContacts: () => Effect.Effect<Contact[], Error>;
+  getContact: (id: string) => Effect.Effect<Contact | null, Error>;
+  updateSwipeStatus: (id: string, status: 'left' | 'right') => Effect.Effect<Contact, Error>;
+  getSwipedRightContacts: () => Effect.Effect<any[], Error>;
+  createContact: (contact: Omit<Contact, 'id' | 'created_at' | 'updated_at' | 'swipe_status'>) => Effect.Effect<Contact, Error>;
+}
 
 export const createContactsRouter = (contactsService: ContactsService) => {
   const router = Router();
@@ -24,6 +31,30 @@ export const createContactsRouter = (contactsService: ContactsService) => {
    */
   router.get('/', async (req: Request, res: Response) => {
     const program = contactsService.getAllContacts();
+    
+    const result = await Effect.runPromise(
+      Effect.either(program)
+    );
+    
+    if (result._tag === 'Left') {
+      res.status(500).json({ error: result.left.message });
+    } else {
+      res.json(result.right);
+    }
+  });
+  
+  /**
+   * @openapi
+   * /contacts/swiped-right:
+   *   get:
+   *     summary: Get all right-swiped contacts with completeness status
+   *     description: Retrieve contacts that have been swiped right along with their profile completeness
+   *     responses:
+   *       200:
+   *         description: List of right-swiped contacts with completeness info
+   */
+  router.get('/swiped-right/list', async (req: Request, res: Response) => {
+    const program = contactsService.getSwipedRightContacts();
     
     const result = await Effect.runPromise(
       Effect.either(program)
@@ -163,30 +194,6 @@ export const createContactsRouter = (contactsService: ContactsService) => {
     }
     
     const program = contactsService.updateSwipeStatus(req.params.id, status);
-    
-    const result = await Effect.runPromise(
-      Effect.either(program)
-    );
-    
-    if (result._tag === 'Left') {
-      res.status(500).json({ error: result.left.message });
-    } else {
-      res.json(result.right);
-    }
-  });
-  
-  /**
-   * @openapi
-   * /contacts/swiped-right:
-   *   get:
-   *     summary: Get all right-swiped contacts with completeness status
-   *     description: Retrieve contacts that have been swiped right along with their profile completeness
-   *     responses:
-   *       200:
-   *         description: List of right-swiped contacts with completeness info
-   */
-  router.get('/swiped-right/list', async (req: Request, res: Response) => {
-    const program = contactsService.getSwipedRightContacts();
     
     const result = await Effect.runPromise(
       Effect.either(program)
