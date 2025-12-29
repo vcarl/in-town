@@ -65,6 +65,15 @@ const seedProgram = Effect.gen(function* () {
   
   const contactsService = yield* ContactsService;
   
+  // Check if contacts already exist
+  const existingContacts = yield* contactsService.getAllContacts();
+  
+  if (existingContacts.length > 0) {
+    console.log(`\n⚠️  Database already contains ${existingContacts.length} contacts`);
+    console.log('Skipping seed to avoid duplicates. Delete the database file to reseed.');
+    return;
+  }
+  
   for (const contact of sampleContacts) {
     yield* contactsService.createContact(contact);
     console.log(`✓ Created contact: ${contact.name}`);
