@@ -29,7 +29,7 @@ export const createContactsRouter = (contactsService: ContactsService) => {
    *               items:
    *                 $ref: '#/components/schemas/Contact'
    */
-  router.get('/', async (req: Request, res: Response) => {
+  router.get('/', async (_req: Request, res: Response) => {
     const program = contactsService.getAllContacts();
     
     const result = await Effect.runPromise(
@@ -53,7 +53,7 @@ export const createContactsRouter = (contactsService: ContactsService) => {
    *       200:
    *         description: List of right-swiped contacts with completeness info
    */
-  router.get('/swiped-right/list', async (req: Request, res: Response) => {
+  router.get('/swiped-right/list', async (_req: Request, res: Response) => {
     const program = contactsService.getSwipedRightContacts();
     
     const result = await Effect.runPromise(

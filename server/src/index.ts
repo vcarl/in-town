@@ -19,12 +19,12 @@ app.use(cors());
 app.use(express.json());
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // OpenAPI documentation endpoint
-app.get('/openapi.json', (req, res) => {
+app.get('/openapi.json', (_req, res) => {
   res.json({
     openapi: '3.0.0',
     info: {

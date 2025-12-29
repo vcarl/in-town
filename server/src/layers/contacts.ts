@@ -1,4 +1,4 @@
-import { Effect, Layer } from 'effect';
+import { Effect } from 'effect';
 import { v4 as uuidv4 } from 'uuid';
 import { DatabaseService } from './database.js';
 import type { Contact, ContactCompleteness } from '../types/database.js';
