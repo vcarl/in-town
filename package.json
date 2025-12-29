@@ -1,0 +1,31 @@
+{
+  "name": "in-town",
+  "version": "1.0.0",
+  "description": "Effect-TS OpenAPI service with Expo app for contact management and swipe functionality",
+  "private": true,
+  "workspaces": [
+    "server",
+    "app"
+  ],
+  "packageManager": "npm@10.5.0",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:server dev:app",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:app": "npm run start --workspace=app",
+    "build": "npm run build --workspace=server",
+    "lint": "npm run lint --workspace=server && npm run lint --workspace=app",
+    "typecheck": "npm run typecheck --workspace=server && npm run typecheck --workspace=app"
+  },
+  "keywords": [
+    "effect-ts",
+    "openapi",
+    "expo",
+    "react-native",
+    "contacts"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
