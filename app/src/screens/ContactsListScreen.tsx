@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import { contactsApi } from '../services/api';
+import { getRightSwipedContacts } from '../services/contacts';
 import type { ContactCompleteness } from '../types/contact';
 
 export const ContactsListScreen: React.FC = () => {
@@ -23,7 +23,7 @@ export const ContactsListScreen: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await contactsApi.getSwipedRightContacts();
+      const data = await getRightSwipedContacts();
       setContacts(data);
     } catch (err) {
       setError('Failed to load contacts');
@@ -55,8 +55,8 @@ export const ContactsListScreen: React.FC = () => {
       <View style={styles.statusContainer}>
         <StatusIcon completed={item.hasBirthday} label="Birthday" />
         <StatusIcon completed={item.hasAddress} label="Address" />
-        <StatusIcon completed={item.hasRelationship} label="Relationship" />
-        <StatusIcon completed={item.hasSocials} label="Socials" />
+        <StatusIcon completed={item.hasPhone} label="Phone" />
+        <StatusIcon completed={item.hasEmail} label="Email" />
       </View>
       
       {item.missingFields.length > 0 && (

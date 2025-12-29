@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { SwipeCard } from '../components/SwipeCard';
-import { contactsApi } from '../services/api';
-import type { Contact } from '../types/contact';
+import {
+  loadDeviceContacts,
+  mergeContactsWithSwipes,
+  updateSwipeStatus,
+  requestContactsPermission,
+} from '../services/contacts';
+import type { Contact, ContactWithSwipe } from '../types/contact';
 
 export const SwipeScreen: React.FC = () => {
-  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [contacts, setContacts] = useState<ContactWithSwipe[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,12 +23,22 @@ export const SwipeScreen: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await contactsApi.getAllContacts();
+      
+      const hasPermission = await requestContactsPermission();
+      if (!hasPermission) {
+        setError('Contacts permission is required to use this app.');
+        setLoading(false);
+        return;
+      }
+      
+      const deviceContacts = await loadDeviceContacts();
+      const contactsWithSwipes = await mergeContactsWithSwipes(deviceContacts);
+      
       // Filter only pending contacts
-      const pendingContacts = data.filter(c => c.swipe_status === 'pending');
+      const pendingContacts = contactsWithSwipes.filter(c => c.swipeStatus === 'pending');
       setContacts(pendingContacts);
     } catch (err) {
-      setError('Failed to load contacts. Make sure the server is running.');
+      setError('Failed to load contacts. Please check permissions.');
       console.error('Error loading contacts:', err);
     } finally {
       setLoading(false);
@@ -32,11 +47,11 @@ export const SwipeScreen: React.FC = () => {
   
   const handleSwipe = async (contact: Contact, direction: 'left' | 'right') => {
     try {
-      await contactsApi.updateSwipeStatus(contact.id, direction);
+      await updateSwipeStatus(contact.id, direction);
       setCurrentIndex(prev => prev + 1);
     } catch (err) {
       console.error('Error updating swipe status:', err);
-      Alert.alert('Error', 'Failed to update swipe status');
+      Alert.alert('Error', 'Failed to save swipe status');
     }
   };
   

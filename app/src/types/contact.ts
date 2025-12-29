@@ -1,17 +1,23 @@
+// Types for device contacts with swipe status
 export interface Contact {
   id: string;
   name: string;
-  birthday: string | null;
-  address: string | null;
-  relationship: string | null;
-  phone: string | null;
-  email: string | null;
-  instagram: string | null;
-  twitter: string | null;
-  facebook: string | null;
-  swipe_status: 'pending' | 'left' | 'right';
-  created_at: string;
-  updated_at: string;
+  phoneNumbers?: Array<{ number?: string; label?: string }>;
+  emails?: Array<{ email?: string; label?: string }>;
+  addresses?: Array<{ street?: string; city?: string; region?: string; postalCode?: string }>;
+  birthday?: { year?: number; month?: number; day?: number };
+  imageAvailable?: boolean;
+  image?: { uri?: string };
+}
+
+export interface SwipeData {
+  contactId: string;
+  status: 'left' | 'right' | 'pending';
+  timestamp: string;
+}
+
+export interface ContactWithSwipe extends Contact {
+  swipeStatus: 'left' | 'right' | 'pending';
 }
 
 export interface ContactCompleteness {
@@ -19,8 +25,8 @@ export interface ContactCompleteness {
   name: string;
   hasBirthday: boolean;
   hasAddress: boolean;
-  hasRelationship: boolean;
-  hasSocials: boolean;
+  hasPhone: boolean;
+  hasEmail: boolean;
   completenessPercentage: number;
   missingFields: string[];
 }

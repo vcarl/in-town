@@ -3,8 +3,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { Effect } from 'effect';
 import { DatabaseServiceLive } from './layers/database.js';
-import { ContactsService } from './layers/contacts.js';
-import { createContactsRouter } from './api/contacts.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -28,83 +26,17 @@ app.get('/openapi.json', (_req, res) => {
   res.json({
     openapi: '3.0.0',
     info: {
-      title: 'In-Town Contacts API',
+      title: 'In-Town API',
       version: '1.0.0',
-      description: 'API for managing contacts with swipe functionality'
+      description: 'Minimal API for In-Town app - primarily for future authentication'
     },
     paths: {
-      '/api/contacts': {
+      '/health': {
         get: {
-          summary: 'Get all contacts',
+          summary: 'Health check',
           responses: {
             '200': {
-              description: 'List of contacts'
-            }
-          }
-        },
-        post: {
-          summary: 'Create a new contact',
-          responses: {
-            '201': {
-              description: 'Contact created'
-            }
-          }
-        }
-      },
-      '/api/contacts/{id}': {
-        get: {
-          summary: 'Get a contact by ID',
-          parameters: [{
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: { type: 'string' }
-          }],
-          responses: {
-            '200': {
-              description: 'Contact details'
-            }
-          }
-        }
-      },
-      '/api/contacts/{id}/swipe': {
-        put: {
-          summary: 'Update contact swipe status',
-          parameters: [{
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: { type: 'string' }
-          }],
-          requestBody: {
-            required: true,
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'object',
-                  properties: {
-                    status: {
-                      type: 'string',
-                      enum: ['left', 'right']
-                    }
-                  }
-                }
-              }
-            }
-          },
-          responses: {
-            '200': {
-              description: 'Swipe status updated'
-            }
-          }
-        }
-      },
-      '/api/contacts/swiped-right/list': {
-        get: {
-          summary: 'Get right-swiped contacts with completeness',
-          responses: {
-            '200': {
-              description: 'List of right-swiped contacts'
+              description: 'Service is healthy'
             }
           }
         }
@@ -116,11 +48,6 @@ app.get('/openapi.json', (_req, res) => {
 // Initialize Effect-TS layers and start server
 const main = Effect.gen(function* () {
   console.log('Initializing services...');
-  
-  const contactsService = yield* ContactsService;
-  
-  // Set up API routes
-  app.use('/api/contacts', createContactsRouter(contactsService));
   
   // Start server
   yield* Effect.promise(() => {

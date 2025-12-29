@@ -92,42 +92,48 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
           <Text style={styles.name}>{contact.name}</Text>
           
           <View style={styles.infoContainer}>
-            {contact.relationship && (
-              <View style={styles.infoRow}>
-                <Text style={styles.label}>Relationship:</Text>
-                <Text style={styles.value}>{contact.relationship}</Text>
-              </View>
-            )}
-            
             {contact.birthday && (
               <View style={styles.infoRow}>
                 <Text style={styles.label}>Birthday:</Text>
-                <Text style={styles.value}>{contact.birthday}</Text>
+                <Text style={styles.value}>
+                  {contact.birthday.month}/{contact.birthday.day}
+                  {contact.birthday.year && `/${contact.birthday.year}`}
+                </Text>
               </View>
             )}
             
-            {contact.address && (
-              <View style={styles.infoRow}>
-                <Text style={styles.label}>Address:</Text>
-                <Text style={styles.value}>{contact.address}</Text>
-              </View>
-            )}
-            
-            {contact.phone && (
+            {contact.phoneNumbers && contact.phoneNumbers.length > 0 && (
               <View style={styles.infoRow}>
                 <Text style={styles.label}>Phone:</Text>
-                <Text style={styles.value}>{contact.phone}</Text>
+                {contact.phoneNumbers.map((phone, index) => (
+                  <Text key={index} style={styles.value}>
+                    {phone.number} {phone.label && `(${phone.label})`}
+                  </Text>
+                ))}
               </View>
             )}
             
-            {(contact.instagram || contact.twitter || contact.facebook) && (
+            {contact.emails && contact.emails.length > 0 && (
               <View style={styles.infoRow}>
-                <Text style={styles.label}>Socials:</Text>
-                <View style={styles.socials}>
-                  {contact.instagram && <Text style={styles.social}>📷 {contact.instagram}</Text>}
-                  {contact.twitter && <Text style={styles.social}>🐦 {contact.twitter}</Text>}
-                  {contact.facebook && <Text style={styles.social}>📘 {contact.facebook}</Text>}
-                </View>
+                <Text style={styles.label}>Email:</Text>
+                {contact.emails.map((email, index) => (
+                  <Text key={index} style={styles.value}>
+                    {email.email}
+                  </Text>
+                ))}
+              </View>
+            )}
+            
+            {contact.addresses && contact.addresses.length > 0 && (
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>Address:</Text>
+                {contact.addresses.map((address, index) => (
+                  <Text key={index} style={styles.value}>
+                    {[address.street, address.city, address.region, address.postalCode]
+                      .filter(Boolean)
+                      .join(', ')}
+                  </Text>
+                ))}
               </View>
             )}
           </View>
