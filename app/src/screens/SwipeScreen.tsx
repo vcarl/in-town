@@ -1,50 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert, Linking } from 'react-native';
 import { SwipeCard } from '../components/SwipeCard';
 import {
   loadDeviceContacts,
   mergeContactsWithSwipes,
   updateSwipeStatus,
+  checkContactsPermission,
   requestContactsPermission,
 } from '../services/contacts';
 import type { Contact, ContactWithSwipe } from '../types/contact';
 
+type PermissionState = 'checking' | 'needs_permission' | 'denied' | 'granted';
+
 export const SwipeScreen: React.FC = () => {
   const [contacts, setContacts] = useState<ContactWithSwipe[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+  const [permissionState, setPermissionState] = useState<PermissionState>('checking');
+
   useEffect(() => {
-    loadContacts();
+    checkPermission();
   }, []);
-  
+
+  const checkPermission = async () => {
+    const status = await checkContactsPermission();
+    if (status === 'granted') {
+      setPermissionState('granted');
+      loadContacts();
+    } else if (status === 'denied') {
+      setPermissionState('denied');
+    } else {
+      setPermissionState('needs_permission');
+    }
+  };
+
+  const handleGrantAccess = async () => {
+    const granted = await requestContactsPermission();
+    if (granted) {
+      setPermissionState('granted');
+      loadContacts();
+    } else {
+      setPermissionState('denied');
+    }
+  };
+
+  const handleOpenSettings = () => {
+    Linking.openSettings();
+  };
+
   const loadContacts = async () => {
     try {
       setLoading(true);
       setError(null);
-      
-      const hasPermission = await requestContactsPermission();
-      if (!hasPermission) {
-        setError('Contacts permission is required to use this app.');
-        setLoading(false);
-        return;
-      }
-      
+
       const deviceContacts = await loadDeviceContacts();
       const contactsWithSwipes = await mergeContactsWithSwipes(deviceContacts);
-      
+
       // Filter only pending contacts
       const pendingContacts = contactsWithSwipes.filter(c => c.swipeStatus === 'pending');
       setContacts(pendingContacts);
     } catch (err) {
-      setError('Failed to load contacts. Please check permissions.');
+      setError('Failed to load contacts.');
       console.error('Error loading contacts:', err);
     } finally {
       setLoading(false);
     }
   };
-  
+
   const handleSwipe = async (contact: Contact, direction: 'left' | 'right') => {
     try {
       await updateSwipeStatus(contact.id, direction);
@@ -54,15 +77,59 @@ export const SwipeScreen: React.FC = () => {
       Alert.alert('Error', 'Failed to save swipe status');
     }
   };
-  
+
   const handleSwipeLeft = (contact: Contact) => {
     handleSwipe(contact, 'left');
   };
-  
+
   const handleSwipeRight = (contact: Contact) => {
     handleSwipe(contact, 'right');
   };
-  
+
+  // Checking permission
+  if (permissionState === 'checking') {
+    return (
+      <View style={styles.centerContainer}>
+        <Text style={styles.logo}>In Town</Text>
+      </View>
+    );
+  }
+
+  // Needs permission - show grant access button
+  if (permissionState === 'needs_permission') {
+    return (
+      <View style={styles.centerContainer}>
+        <Text style={styles.logo}>In Town</Text>
+        <Text style={styles.permissionTitle}>Ready to get started?</Text>
+        <Text style={styles.permissionText}>
+          Tap below to grant access to your contacts
+        </Text>
+        <TouchableOpacity style={styles.grantButton} onPress={handleGrantAccess}>
+          <Text style={styles.grantButtonText}>Grant Contact Access</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  // Permission denied - show settings prompt
+  if (permissionState === 'denied') {
+    return (
+      <View style={styles.centerContainer}>
+        <Text style={styles.logo}>In Town</Text>
+        <Text style={styles.permissionTitle}>Permission Required</Text>
+        <Text style={styles.permissionText}>
+          Contact access was denied. Please enable it in Settings to use this app.
+        </Text>
+        <TouchableOpacity style={styles.grantButton} onPress={handleOpenSettings}>
+          <Text style={styles.grantButtonText}>Open Settings</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.retryLink} onPress={checkPermission}>
+          <Text style={styles.retryLinkText}>Check Again</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   if (loading) {
     return (
       <View style={styles.centerContainer}>
@@ -71,18 +138,18 @@ export const SwipeScreen: React.FC = () => {
       </View>
     );
   }
-  
+
   if (error) {
     return (
       <View style={styles.centerContainer}>
-        <Text style={styles.errorText}>⚠️ {error}</Text>
+        <Text style={styles.errorText}>{error}</Text>
         <TouchableOpacity style={styles.retryButton} onPress={loadContacts}>
           <Text style={styles.retryButtonText}>Retry</Text>
         </TouchableOpacity>
       </View>
     );
   }
-  
+
   if (contacts.length === 0 || currentIndex >= contacts.length) {
     return (
       <View style={styles.centerContainer}>
@@ -97,9 +164,9 @@ export const SwipeScreen: React.FC = () => {
       </View>
     );
   }
-  
+
   const currentContact = contacts[currentIndex];
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -109,7 +176,7 @@ export const SwipeScreen: React.FC = () => {
           {currentIndex + 1} / {contacts.length}
         </Text>
       </View>
-      
+
       <View style={styles.cardContainer}>
         <SwipeCard
           key={currentContact.id}
@@ -132,7 +199,46 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5F5F5',
-    padding: 20,
+    padding: 30,
+  },
+  logo: {
+    fontSize: 42,
+    fontWeight: 'bold',
+    color: '#4ECDC4',
+    marginBottom: 24,
+  },
+  permissionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  permissionText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 32,
+    lineHeight: 24,
+  },
+  grantButton: {
+    backgroundColor: '#4ECDC4',
+    paddingHorizontal: 40,
+    paddingVertical: 16,
+    borderRadius: 30,
+  },
+  grantButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  retryLink: {
+    marginTop: 20,
+    padding: 10,
+  },
+  retryLinkText: {
+    color: '#4ECDC4',
+    fontSize: 16,
   },
   header: {
     paddingTop: 60,

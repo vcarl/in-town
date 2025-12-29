@@ -4,6 +4,12 @@ import type { Contact, SwipeData, ContactWithSwipe, ContactCompleteness } from '
 
 const SWIPE_DATA_KEY = '@swipe_data';
 
+// Check contacts permission without requesting
+export const checkContactsPermission = async (): Promise<'granted' | 'denied' | 'undetermined'> => {
+  const { status } = await Contacts.getPermissionsAsync();
+  return status as 'granted' | 'denied' | 'undetermined';
+};
+
 // Request contacts permission
 export const requestContactsPermission = async (): Promise<boolean> => {
   const { status } = await Contacts.requestPermissionsAsync();

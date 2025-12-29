@@ -10,3 +10,12 @@ build
 data/
 .DS_Store
 coverage
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+local.properties
+.gradle/
+captures/
+.externalNativeBuild/
+.cxx/
