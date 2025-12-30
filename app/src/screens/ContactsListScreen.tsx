@@ -14,11 +14,11 @@ export const ContactsListScreen: React.FC = () => {
   const [contacts, setContacts] = useState<ContactCompleteness[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     loadContacts();
   }, []);
-  
+
   const loadContacts = async () => {
     try {
       setLoading(true);
@@ -32,44 +32,35 @@ export const ContactsListScreen: React.FC = () => {
       setLoading(false);
     }
   };
-  
+
   const renderContactItem = ({ item }: { item: ContactCompleteness }) => (
     <View style={styles.contactCard}>
       <View style={styles.contactHeader}>
         <Text style={styles.contactName}>{item.name}</Text>
         <View style={styles.completenessContainer}>
-          <Text style={styles.completenessText}>
-            {Math.round(item.completenessPercentage)}%
-          </Text>
+          <Text style={styles.completenessText}>{Math.round(item.completenessPercentage)}%</Text>
           <View style={styles.progressBar}>
-            <View
-              style={[
-                styles.progressFill,
-                { width: `${item.completenessPercentage}%` },
-              ]}
-            />
+            <View style={[styles.progressFill, { width: `${item.completenessPercentage}%` }]} />
           </View>
         </View>
       </View>
-      
+
       <View style={styles.statusContainer}>
         <StatusIcon completed={item.hasBirthday} label="Birthday" />
         <StatusIcon completed={item.hasAddress} label="Address" />
         <StatusIcon completed={item.hasPhone} label="Phone" />
         <StatusIcon completed={item.hasEmail} label="Email" />
       </View>
-      
+
       {item.missingFields.length > 0 && (
         <View style={styles.missingContainer}>
           <Text style={styles.missingLabel}>Missing:</Text>
-          <Text style={styles.missingText}>
-            {item.missingFields.join(', ')}
-          </Text>
+          <Text style={styles.missingText}>{item.missingFields.join(', ')}</Text>
         </View>
       )}
     </View>
   );
-  
+
   if (loading) {
     return (
       <View style={styles.centerContainer}>
@@ -78,7 +69,7 @@ export const ContactsListScreen: React.FC = () => {
       </View>
     );
   }
-  
+
   if (error) {
     return (
       <View style={styles.centerContainer}>
@@ -89,7 +80,7 @@ export const ContactsListScreen: React.FC = () => {
       </View>
     );
   }
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -98,20 +89,18 @@ export const ContactsListScreen: React.FC = () => {
           {contacts.length} contact{contacts.length !== 1 ? 's' : ''}
         </Text>
       </View>
-      
+
       {contacts.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyEmoji}>👋</Text>
           <Text style={styles.emptyTitle}>No contacts yet</Text>
-          <Text style={styles.emptyText}>
-            Swipe right on contacts you'd like to visit
-          </Text>
+          <Text style={styles.emptyText}>Swipe right on contacts you'd like to visit</Text>
         </View>
       ) : (
         <FlatList
           data={contacts}
           renderItem={renderContactItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
         />
@@ -120,15 +109,10 @@ export const ContactsListScreen: React.FC = () => {
   );
 };
 
-const StatusIcon: React.FC<{ completed: boolean; label: string }> = ({
-  completed,
-  label,
-}) => (
+const StatusIcon: React.FC<{ completed: boolean; label: string }> = ({ completed, label }) => (
   <View style={styles.statusItem}>
     <Text style={styles.statusIcon}>{completed ? '✅' : '⭕'}</Text>
-    <Text style={[styles.statusLabel, !completed && styles.incompleteLabel]}>
-      {label}
-    </Text>
+    <Text style={[styles.statusLabel, !completed && styles.incompleteLabel]}>{label}</Text>
   </View>
 );
 

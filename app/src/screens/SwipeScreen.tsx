@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert, Linking } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Alert,
+  Linking,
+} from 'react-native';
 import { SwipeCard } from '../components/SwipeCard';
 import {
   loadDeviceContacts,
@@ -101,9 +109,7 @@ export const SwipeScreen: React.FC = () => {
       <View style={styles.centerContainer}>
         <Text style={styles.logo}>In Town</Text>
         <Text style={styles.permissionTitle}>Ready to get started?</Text>
-        <Text style={styles.permissionText}>
-          Tap below to grant access to your contacts
-        </Text>
+        <Text style={styles.permissionText}>Tap below to grant access to your contacts</Text>
         <TouchableOpacity style={styles.grantButton} onPress={handleGrantAccess}>
           <Text style={styles.grantButtonText}>Grant Contact Access</Text>
         </TouchableOpacity>
@@ -155,9 +161,7 @@ export const SwipeScreen: React.FC = () => {
       <View style={styles.centerContainer}>
         <Text style={styles.completeText}>🎉</Text>
         <Text style={styles.completeTitle}>All Done!</Text>
-        <Text style={styles.completeSubtitle}>
-          You've reviewed all your contacts
-        </Text>
+        <Text style={styles.completeSubtitle}>You've reviewed all your contacts</Text>
         <TouchableOpacity style={styles.refreshButton} onPress={loadContacts}>
           <Text style={styles.refreshButtonText}>Refresh</Text>
         </TouchableOpacity>

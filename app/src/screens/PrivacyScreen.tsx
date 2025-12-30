@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Linking,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Linking } from 'react-native';
 import { config } from '../config';
 
 interface PrivacyScreenProps {
@@ -77,9 +70,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onAccept }) => {
         <TouchableOpacity style={styles.continueButton} onPress={onAccept}>
           <Text style={styles.continueButtonText}>Continue</Text>
         </TouchableOpacity>
-        <Text style={styles.footerText}>
-          By continuing, you agree to grant contact access
-        </Text>
+        <Text style={styles.footerText}>By continuing, you agree to grant contact access</Text>
       </View>
     </View>
   );

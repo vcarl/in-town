@@ -142,7 +142,7 @@
    │
    ▼
 7. DatabaseService executes SQL:
-   UPDATE contacts 
+   UPDATE contacts
    SET swipe_status = 'right',
        updated_at = now()
    WHERE id = ?
@@ -306,6 +306,7 @@ Database
 ## Key Architectural Decisions
 
 ### Why Effect-TS?
+
 - Functional programming patterns
 - Composable services via Context.Tag
 - Type-safe error handling
@@ -313,18 +314,21 @@ Database
 - Testability
 
 ### Why SQLite?
+
 - Zero configuration
 - File-based (easy backup)
 - Good performance for MVP
 - Can migrate to PostgreSQL later
 
 ### Why Expo?
+
 - Fast development
 - Built-in tooling
 - Easy Android deployment
 - Cross-platform ready (iOS future)
 
 ### Why Monorepo?
+
 - Shared types
 - Single version control
 - Coordinated releases
@@ -333,12 +337,14 @@ Database
 ## Performance Considerations
 
 ### Backend
+
 - Database queries use indexes
 - Prepared statements (cached)
 - Minimal middleware stack
 - No ORMs (direct SQL for speed)
 
 ### Mobile
+
 - 60fps animations (Reanimated)
 - Optimized re-renders (React.memo potential)
 - Lazy loading (future pagination)

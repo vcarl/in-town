@@ -19,11 +19,13 @@ export const requestContactsPermission = async (): Promise<boolean> => {
 // Load all device contacts
 export const loadDeviceContacts = async (): Promise<Contact[]> => {
   const { status } = await Contacts.requestPermissionsAsync();
-  
+
   if (status !== 'granted') {
-    throw new Error('Permission to access contacts is required to use this feature. Please enable it in your device settings.');
+    throw new Error(
+      'Permission to access contacts is required to use this feature. Please enable it in your device settings.'
+    );
   }
-  
+
   const { data } = await Contacts.getContactsAsync({
     fields: [
       Contacts.Fields.PhoneNumbers,
@@ -33,7 +35,7 @@ export const loadDeviceContacts = async (): Promise<Contact[]> => {
       Contacts.Fields.Image,
     ],
   });
-  
+
   // Filter out contacts without IDs and map to our Contact type
   return data
     .filter(contact => contact.id !== undefined)
@@ -79,11 +81,9 @@ export const updateSwipeStatus = async (
 };
 
 // Merge contacts with swipe data
-export const mergeContactsWithSwipes = async (
-  contacts: Contact[]
-): Promise<ContactWithSwipe[]> => {
+export const mergeContactsWithSwipes = async (contacts: Contact[]): Promise<ContactWithSwipe[]> => {
   const swipeData = await loadSwipeData();
-  
+
   return contacts.map(contact => ({
     ...contact,
     swipeStatus: swipeData[contact.id]?.status || 'pending',
@@ -96,17 +96,17 @@ export const calculateCompleteness = (contact: Contact): ContactCompleteness => 
   const hasAddress = !!(contact.addresses && contact.addresses.length > 0);
   const hasPhone = !!(contact.phoneNumbers && contact.phoneNumbers.length > 0);
   const hasEmail = !!(contact.emails && contact.emails.length > 0);
-  
+
   const fields = [hasBirthday, hasAddress, hasPhone, hasEmail];
   const completedFields = fields.filter(Boolean).length;
   const completenessPercentage = (completedFields / fields.length) * 100;
-  
+
   const missingFields: string[] = [];
   if (!hasBirthday) missingFields.push('birthday');
   if (!hasAddress) missingFields.push('address');
   if (!hasPhone) missingFields.push('phone');
   if (!hasEmail) missingFields.push('email');
-  
+
   return {
     id: contact.id,
     name: contact.name,
@@ -123,10 +123,8 @@ export const calculateCompleteness = (contact: Contact): ContactCompleteness => 
 export const getRightSwipedContacts = async (): Promise<ContactCompleteness[]> => {
   const contacts = await loadDeviceContacts();
   const swipeData = await loadSwipeData();
-  
-  const rightSwiped = contacts.filter(
-    contact => swipeData[contact.id]?.status === 'right'
-  );
-  
+
+  const rightSwiped = contacts.filter(contact => swipeData[contact.id]?.status === 'right');
+
   return rightSwiped.map(calculateCompleteness);
 };

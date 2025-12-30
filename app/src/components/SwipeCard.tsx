@@ -23,24 +23,23 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const opacity = useSharedValue(1);
-  
+
   const gesture = Gesture.Pan()
-    .onUpdate((event) => {
+    .onUpdate(event => {
       translateX.value = event.translationX;
       translateY.value = event.translationY;
     })
-    .onEnd((event) => {
+    .onEnd(event => {
       if (Math.abs(event.translationX) > SWIPE_THRESHOLD) {
         // Swipe detected
         const direction = event.translationX > 0 ? 'right' : 'left';
-        
+
         // Animate card off screen
-        translateX.value = withTiming(
-          direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH,
-          { duration: 300 }
-        );
+        translateX.value = withTiming(direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH, {
+          duration: 300,
+        });
         opacity.value = withTiming(0, { duration: 300 });
-        
+
         // Call callback after animation
         setTimeout(() => {
           if (direction === 'right') {
@@ -55,10 +54,10 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
         translateY.value = withSpring(0);
       }
     });
-  
+
   const animatedStyle = useAnimatedStyle(() => {
     const rotation = translateX.value / 20;
-    
+
     return {
       transform: [
         { translateX: translateX.value },
@@ -68,29 +67,29 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
       opacity: opacity.value,
     };
   });
-  
+
   const leftIndicatorStyle = useAnimatedStyle(() => ({
     opacity: translateX.value < -50 ? withTiming(1) : withTiming(0),
   }));
-  
+
   const rightIndicatorStyle = useAnimatedStyle(() => ({
     opacity: translateX.value > 50 ? withTiming(1) : withTiming(0),
   }));
-  
+
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View style={[styles.card, animatedStyle]}>
         <Animated.View style={[styles.indicator, styles.leftIndicator, leftIndicatorStyle]}>
           <Text style={styles.indicatorText}>NOPE</Text>
         </Animated.View>
-        
+
         <Animated.View style={[styles.indicator, styles.rightIndicator, rightIndicatorStyle]}>
           <Text style={styles.indicatorText}>VISIT</Text>
         </Animated.View>
-        
+
         <View style={styles.content}>
           <Text style={styles.name}>{contact.name}</Text>
-          
+
           <View style={styles.infoContainer}>
             {contact.birthday?.month && contact.birthday?.day && (
               <View style={styles.infoRow}>
@@ -101,7 +100,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
                 </Text>
               </View>
             )}
-            
+
             {contact.phoneNumbers && contact.phoneNumbers.length > 0 && (
               <View style={styles.infoRow}>
                 <Text style={styles.label}>Phone:</Text>
@@ -112,7 +111,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
                 ))}
               </View>
             )}
-            
+
             {contact.emails && contact.emails.length > 0 && (
               <View style={styles.infoRow}>
                 <Text style={styles.label}>Email:</Text>
@@ -123,7 +122,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
                 ))}
               </View>
             )}
-            
+
             {contact.addresses && contact.addresses.length > 0 && (
               <View style={styles.infoRow}>
                 <Text style={styles.label}>Address:</Text>
@@ -137,7 +136,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
               </View>
             )}
           </View>
-          
+
           <Text style={styles.instruction}>← Swipe left (nope) or right (visit) →</Text>
         </View>
       </Animated.View>
