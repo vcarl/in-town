@@ -13,10 +13,6 @@ export default function App() {
   const [activeScreen, setActiveScreen] = useState<'swipe' | 'list'>('swipe');
   const [showPrivacy, setShowPrivacy] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    checkPrivacyAccepted();
-  }, []);
-
   const checkPrivacyAccepted = async () => {
     try {
       const accepted = await AsyncStorage.getItem(PRIVACY_ACCEPTED_KEY);
@@ -25,6 +21,10 @@ export default function App() {
       setShowPrivacy(true);
     }
   };
+
+  useEffect(() => {
+    checkPrivacyAccepted();
+  }, []);
 
   const handlePrivacyAccept = async () => {
     try {
