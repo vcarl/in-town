@@ -14,7 +14,11 @@
     "dev:app": "npm run start --workspace=app",
     "build": "npm run build --workspace=server",
     "lint": "npm run lint --workspace=server && npm run lint --workspace=app",
-    "typecheck": "npm run typecheck --workspace=server && npm run typecheck --workspace=app"
+    "typecheck": "npm run typecheck --workspace=server && npm run typecheck --workspace=app",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "clean": "rm -rf node_modules app/node_modules server/node_modules dist server/dist build app/.expo",
+    "prepare": "husky"
   },
   "keywords": [
     "effect-ts",
@@ -26,6 +30,18 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "npm-run-all": "^4.1.5"
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.7.4"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   }
 }

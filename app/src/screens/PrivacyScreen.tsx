@@ -1,13 +1,6 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Linking,
-} from 'react-native';
-import { config } from '../config';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Linking } from "react-native";
+import { config } from "../config";
 
 interface PrivacyScreenProps {
   onAccept: () => void;
@@ -77,9 +70,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onAccept }) => {
         <TouchableOpacity style={styles.continueButton} onPress={onAccept}>
           <Text style={styles.continueButtonText}>Continue</Text>
         </TouchableOpacity>
-        <Text style={styles.footerText}>
-          By continuing, you agree to grant contact access
-        </Text>
+        <Text style={styles.footerText}>By continuing, you agree to grant contact access</Text>
       </View>
     </View>
   );
@@ -88,7 +79,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onAccept }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
   },
   content: {
     padding: 24,
@@ -96,22 +87,22 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontSize: 42,
-    fontWeight: 'bold',
-    color: '#4ECDC4',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#4ECDC4",
+    textAlign: "center",
     marginBottom: 8,
   },
   tagline: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
     marginBottom: 32,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 16,
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -120,24 +111,24 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   bulletPoint: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 16,
   },
   bullet: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#4ECDC4',
-    color: 'white',
+    backgroundColor: "#4ECDC4",
+    color: "white",
     fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     lineHeight: 28,
     marginRight: 12,
   },
@@ -146,43 +137,43 @@ const styles = StyleSheet.create({
   },
   bulletTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
     marginBottom: 4,
   },
   bulletText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     lineHeight: 20,
   },
   privacyLink: {
     fontSize: 16,
-    color: '#4ECDC4',
-    textAlign: 'center',
-    textDecorationLine: 'underline',
+    color: "#4ECDC4",
+    textAlign: "center",
+    textDecorationLine: "underline",
   },
   footer: {
     padding: 24,
     paddingBottom: 40,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    borderTopColor: "#E0E0E0",
   },
   continueButton: {
-    backgroundColor: '#4ECDC4',
+    backgroundColor: "#4ECDC4",
     paddingVertical: 16,
     borderRadius: 30,
     marginBottom: 12,
   },
   continueButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   footerText: {
     fontSize: 12,
-    color: '#999',
-    textAlign: 'center',
+    color: "#999",
+    textAlign: "center",
   },
 });
