@@ -93,50 +93,6 @@ Add feature for contact search
 - Update tests for search behavior
 ```
 
-### Pull Request Process
-
-1. **Create a feature branch**
-
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-2. **Make your changes**
-   - Write clean, readable code
-   - Follow existing code style
-   - Add comments for complex logic
-   - Update documentation if needed
-
-3. **Test your changes**
-
-   ```bash
-   npm run lint
-   npm run typecheck
-   npm run build
-   ```
-
-4. **Commit your changes**
-
-   ```bash
-   git add .
-   git commit -m "Your commit message"
-   ```
-
-   The pre-commit hooks will run automatically.
-
-5. **Push to your fork**
-
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-6. **Create a Pull Request**
-   - Provide a clear description of the changes
-   - Reference any related issues
-   - Include screenshots for UI changes
-   - Wait for CI checks to pass
-   - Request review from maintainers
-
 ## Project Structure
 
 ```
@@ -160,20 +116,6 @@ in-town/
 
 ## Code Style Guidelines
 
-### TypeScript
-
-- Use TypeScript's strict mode
-- Avoid `any` types - use `unknown` if necessary
-- Define interfaces for complex objects
-- Use type inference when possible
-
-### React/React Native
-
-- Use functional components with hooks
-- Keep components small and focused
-- Use meaningful component and prop names
-- Extract reusable logic into custom hooks
-
 ### Naming Conventions
 
 - **Files**: PascalCase for components (`SwipeCard.tsx`), camelCase for utilities (`contacts.ts`)
@@ -185,10 +127,11 @@ in-town/
 ### Formatting
 
 - 2 spaces for indentation
-- Single quotes for strings
-- Trailing commas in multi-line objects/arrays
+- Double quotes for strings
+- Always use trailing commas
 - 100 character line length
 - Semicolons required
+- Always use arrow parens
 
 Prettier handles most formatting automatically.
 
@@ -201,24 +144,6 @@ Currently, the project doesn't have a formal test suite. When adding tests:
 - Use descriptive test names
 - Test both success and error cases
 
-## Documentation
-
-### Code Comments
-
-- Add comments for complex logic
-- Document public APIs and interfaces
-- Keep comments up-to-date with code changes
-- Use JSDoc format for function documentation
-
-### README Updates
-
-Update the README.md if you:
-
-- Add new features
-- Change setup instructions
-- Add new dependencies
-- Modify configuration
-
 ## Privacy and Security
 
 This app is privacy-focused. When contributing:
@@ -227,12 +152,6 @@ This app is privacy-focused. When contributing:
 - Keep all personal data on-device
 - Follow secure coding practices
 - Report security issues privately
-
-## Need Help?
-
-- Check existing issues and documentation
-- Open an issue for bugs or feature requests
-- Be respectful and constructive in discussions
 
 ## License
 

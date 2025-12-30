@@ -1,9 +1,9 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import { Effect } from 'effect';
-import { DatabaseServiceLive } from './layers/database.js';
-import dotenv from 'dotenv';
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import { Effect } from "effect";
+import { DatabaseServiceLive } from "./layers/database.js";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -17,26 +17,26 @@ app.use(cors());
 app.use(express.json());
 
 // Health check endpoint
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
 // OpenAPI documentation endpoint
-app.get('/openapi.json', (_req, res) => {
+app.get("/openapi.json", (_req, res) => {
   res.json({
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     info: {
-      title: 'In-Town API',
-      version: '1.0.0',
-      description: 'Minimal API for In-Town app - primarily for future authentication',
+      title: "In-Town API",
+      version: "1.0.0",
+      description: "Minimal API for In-Town app - primarily for future authentication",
     },
     paths: {
-      '/health': {
+      "/health": {
         get: {
-          summary: 'Health check',
+          summary: "Health check",
           responses: {
-            '200': {
-              description: 'Service is healthy',
+            "200": {
+              description: "Service is healthy",
             },
           },
         },
@@ -47,11 +47,11 @@ app.get('/openapi.json', (_req, res) => {
 
 // Initialize Effect-TS layers and start server
 const main = Effect.gen(function* () {
-  console.log('Initializing services...');
+  console.log("Initializing services...");
 
   // Start server
   yield* Effect.promise(() => {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
         console.log(`📖 API documentation: http://localhost:${PORT}/openapi.json`);
@@ -65,7 +65,7 @@ const main = Effect.gen(function* () {
 // Run the program
 const program = Effect.provide(main, DatabaseServiceLive);
 
-Effect.runPromise(program).catch(error => {
-  console.error('Failed to start server:', error);
+Effect.runPromise(program).catch((error) => {
+  console.error("Failed to start server:", error);
   process.exit(1);
 });

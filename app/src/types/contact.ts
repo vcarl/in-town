@@ -12,12 +12,12 @@ export interface Contact {
 
 export interface SwipeData {
   contactId: string;
-  status: 'left' | 'right' | 'pending';
+  status: "left" | "right" | "pending";
   timestamp: string;
 }
 
 export interface ContactWithSwipe extends Contact {
-  swipeStatus: 'left' | 'right' | 'pending';
+  swipeStatus: "left" | "right" | "pending";
 }
 
 export interface ContactCompleteness {

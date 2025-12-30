@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,9 +6,9 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
-} from 'react-native';
-import { getRightSwipedContacts } from '../services/contacts';
-import type { ContactCompleteness } from '../types/contact';
+} from "react-native";
+import { getRightSwipedContacts } from "../services/contacts";
+import type { ContactCompleteness } from "../types/contact";
 
 export const ContactsListScreen: React.FC = () => {
   const [contacts, setContacts] = useState<ContactCompleteness[]>([]);
@@ -26,8 +26,8 @@ export const ContactsListScreen: React.FC = () => {
       const data = await getRightSwipedContacts();
       setContacts(data);
     } catch (err) {
-      setError('Failed to load contacts');
-      console.error('Error loading contacts:', err);
+      setError("Failed to load contacts");
+      console.error("Error loading contacts:", err);
     } finally {
       setLoading(false);
     }
@@ -55,7 +55,7 @@ export const ContactsListScreen: React.FC = () => {
       {item.missingFields.length > 0 && (
         <View style={styles.missingContainer}>
           <Text style={styles.missingLabel}>Missing:</Text>
-          <Text style={styles.missingText}>{item.missingFields.join(', ')}</Text>
+          <Text style={styles.missingText}>{item.missingFields.join(", ")}</Text>
         </View>
       )}
     </View>
@@ -86,7 +86,7 @@ export const ContactsListScreen: React.FC = () => {
       <View style={styles.header}>
         <Text style={styles.title}>People to Visit</Text>
         <Text style={styles.subtitle}>
-          {contacts.length} contact{contacts.length !== 1 ? 's' : ''}
+          {contacts.length} contact{contacts.length !== 1 ? "s" : ""}
         </Text>
       </View>
 
@@ -100,7 +100,7 @@ export const ContactsListScreen: React.FC = () => {
         <FlatList
           data={contacts}
           renderItem={renderContactItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
         />
@@ -111,7 +111,7 @@ export const ContactsListScreen: React.FC = () => {
 
 const StatusIcon: React.FC<{ completed: boolean; label: string }> = ({ completed, label }) => (
   <View style={styles.statusItem}>
-    <Text style={styles.statusIcon}>{completed ? '✅' : '⭕'}</Text>
+    <Text style={styles.statusIcon}>{completed ? "✅" : "⭕"}</Text>
     <Text style={[styles.statusLabel, !completed && styles.incompleteLabel]}>{label}</Text>
   </View>
 );
@@ -119,21 +119,21 @@ const StatusIcon: React.FC<{ completed: boolean; label: string }> = ({ completed
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
   },
   centerContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5F5F5",
     padding: 20,
   },
   header: {
     paddingTop: 60,
     paddingBottom: 20,
     paddingHorizontal: 20,
-    backgroundColor: 'white',
-    shadowColor: '#000',
+    backgroundColor: "white",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
@@ -141,67 +141,67 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginBottom: 5,
   },
   subtitle: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   listContainer: {
     padding: 15,
   },
   contactCard: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 15,
     padding: 15,
     marginBottom: 15,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
   },
   contactHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
   },
   contactName: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     flex: 1,
   },
   completenessContainer: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   completenessText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#4ECDC4',
+    fontWeight: "bold",
+    color: "#4ECDC4",
     marginBottom: 4,
   },
   progressBar: {
     width: 80,
     height: 8,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: "#E0E0E0",
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressFill: {
-    height: '100%',
-    backgroundColor: '#4ECDC4',
+    height: "100%",
+    backgroundColor: "#4ECDC4",
   },
   statusContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginBottom: 10,
   },
   statusItem: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   statusIcon: {
     fontSize: 24,
@@ -209,53 +209,53 @@ const styles = StyleSheet.create({
   },
   statusLabel: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
   },
   incompleteLabel: {
-    color: '#999',
+    color: "#999",
   },
   missingContainer: {
     marginTop: 10,
     padding: 10,
-    backgroundColor: '#FFF8E1',
+    backgroundColor: "#FFF8E1",
     borderRadius: 8,
   },
   missingLabel: {
     fontSize: 12,
-    fontWeight: 'bold',
-    color: '#F57C00',
+    fontWeight: "bold",
+    color: "#F57C00",
     marginBottom: 4,
   },
   missingText: {
     fontSize: 12,
-    color: '#F57C00',
+    color: "#F57C00",
   },
   loadingText: {
     marginTop: 20,
     fontSize: 16,
-    color: '#666',
+    color: "#666",
   },
   errorText: {
     fontSize: 16,
-    color: '#FF6B6B',
-    textAlign: 'center',
+    color: "#FF6B6B",
+    textAlign: "center",
     marginBottom: 20,
   },
   retryButton: {
-    backgroundColor: '#4ECDC4',
+    backgroundColor: "#4ECDC4",
     paddingHorizontal: 30,
     paddingVertical: 15,
     borderRadius: 25,
   },
   retryButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   emptyContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 40,
   },
   emptyEmoji: {
@@ -264,13 +264,13 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    color: '#333',
+    color: "#333",
   },
   emptyText: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
   },
 });

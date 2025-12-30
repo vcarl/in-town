@@ -1,16 +1,16 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import React from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
   runOnJS,
-} from 'react-native-reanimated';
-import type { Contact } from '../types/contact';
+} from "react-native-reanimated";
+import type { Contact } from "../types/contact";
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
 
 interface SwipeCardProps {
@@ -25,24 +25,24 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
   const opacity = useSharedValue(1);
 
   const gesture = Gesture.Pan()
-    .onUpdate(event => {
+    .onUpdate((event) => {
       translateX.value = event.translationX;
       translateY.value = event.translationY;
     })
-    .onEnd(event => {
+    .onEnd((event) => {
       if (Math.abs(event.translationX) > SWIPE_THRESHOLD) {
         // Swipe detected
-        const direction = event.translationX > 0 ? 'right' : 'left';
+        const direction = event.translationX > 0 ? "right" : "left";
 
         // Animate card off screen
-        translateX.value = withTiming(direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH, {
+        translateX.value = withTiming(direction === "right" ? SCREEN_WIDTH : -SCREEN_WIDTH, {
           duration: 300,
         });
         opacity.value = withTiming(0, { duration: 300 });
 
         // Call callback after animation
         setTimeout(() => {
-          if (direction === 'right') {
+          if (direction === "right") {
             runOnJS(onSwipeRight)(contact);
           } else {
             runOnJS(onSwipeLeft)(contact);
@@ -130,7 +130,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ contact, onSwipeLeft, onSw
                   <Text key={index} style={styles.value}>
                     {[address.street, address.city, address.region, address.postalCode]
                       .filter(Boolean)
-                      .join(', ')}
+                      .join(", ")}
                   </Text>
                 ))}
               </View>
@@ -148,9 +148,9 @@ const styles = StyleSheet.create({
   card: {
     width: SCREEN_WIDTH * 0.9,
     height: 500,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -163,9 +163,9 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   infoContainer: {
     flex: 1,
@@ -176,30 +176,30 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
+    fontWeight: "600",
+    color: "#666",
     marginBottom: 4,
   },
   value: {
     fontSize: 16,
-    color: '#000',
+    color: "#000",
   },
   socials: {
     gap: 4,
   },
   social: {
     fontSize: 14,
-    color: '#000',
+    color: "#000",
     marginTop: 2,
   },
   instruction: {
     fontSize: 14,
-    color: '#999',
-    textAlign: 'center',
-    marginTop: 'auto',
+    color: "#999",
+    textAlign: "center",
+    marginTop: "auto",
   },
   indicator: {
-    position: 'absolute',
+    position: "absolute",
     top: 40,
     padding: 10,
     borderRadius: 10,
@@ -208,16 +208,16 @@ const styles = StyleSheet.create({
   },
   leftIndicator: {
     left: 40,
-    borderColor: '#FF6B6B',
-    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+    borderColor: "#FF6B6B",
+    backgroundColor: "rgba(255, 107, 107, 0.1)",
   },
   rightIndicator: {
     right: 40,
-    borderColor: '#4ECDC4',
-    backgroundColor: 'rgba(78, 205, 196, 0.1)',
+    borderColor: "#4ECDC4",
+    backgroundColor: "rgba(78, 205, 196, 0.1)",
   },
   indicatorText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
