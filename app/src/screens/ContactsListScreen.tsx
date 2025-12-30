@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,17 +7,32 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Ionicons } from "@expo/vector-icons";
 import { getRightSwipedContacts } from "../services/contacts";
 import type { ContactCompleteness } from "../types/contact";
+import type { RootStackParamList } from "../navigation";
+
+type ContactsListNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const ContactsListScreen: React.FC = () => {
+  const navigation = useNavigation<ContactsListNavigationProp>();
   const [contacts, setContacts] = useState<ContactCompleteness[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadContacts();
-  }, []);
+  // Reload contacts when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadContacts();
+    }, [])
+  );
+
+  const handleBack = () => {
+    navigation.navigate("Summary");
+  };
+
 
   const loadContacts = async () => {
     try {
@@ -84,7 +99,13 @@ export const ContactsListScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>People to Visit</Text>
+        <View style={styles.headerRow}>
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color="#4ECDC4" />
+          </TouchableOpacity>
+          <Text style={styles.title}>People to Visit</Text>
+          <View style={styles.backButton} />
+        </View>
         <Text style={styles.subtitle}>
           {contacts.length} contact{contacts.length !== 1 ? "s" : ""}
         </Text>
@@ -138,12 +159,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+    alignItems: 'center',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 5,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 5,
   },
   subtitle: {
     fontSize: 14,

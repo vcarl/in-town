@@ -8,8 +8,16 @@ export const config = {
   // Privacy policy path
   privacyPolicyPath: "/privacy",
 
+  // Homepage path
+  homepagePath: '/',
+
   // Get full privacy policy URL
   get privacyPolicyUrl() {
     return `${this.baseUrl}${this.privacyPolicyPath}`;
+  },
+
+  // Get full homepage URL
+  get homepageUrl() {
+    return this.baseUrl;
   },
 };

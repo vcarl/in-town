@@ -128,3 +128,24 @@ export const getRightSwipedContacts = async (): Promise<ContactCompleteness[]> =
 
   return rightSwiped.map(calculateCompleteness);
 };
+
+// Contact statistics for Summary screen
+export interface ContactStatistics {
+  totalDeviceContacts: number;
+  pendingCount: number;
+}
+
+// Get contact statistics
+export const getContactStatistics = async (): Promise<ContactStatistics> => {
+  const contacts = await loadDeviceContacts();
+  const swipeData = await loadSwipeData();
+
+  const swipedCount = Object.values(swipeData).filter(
+    s => s.status === 'left' || s.status === 'right'
+  ).length;
+
+  return {
+    totalDeviceContacts: contacts.length,
+    pendingCount: contacts.length - swipedCount,
+  };
+};

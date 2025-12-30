@@ -8,6 +8,9 @@ import {
   Alert,
   Linking,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Ionicons } from "@expo/vector-icons";
 import { SwipeCard } from "../components/SwipeCard";
 import {
   loadDeviceContacts,
@@ -17,10 +20,14 @@ import {
   requestContactsPermission,
 } from "../services/contacts";
 import type { Contact, ContactWithSwipe } from "../types/contact";
+import type { RootStackParamList } from "../navigation";
+
+type ManageContactsNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 type PermissionState = "checking" | "needs_permission" | "denied" | "granted";
 
-export const SwipeScreen: React.FC = () => {
+export const ManageContactsScreen: React.FC = () => {
+  const navigation = useNavigation<ManageContactsNavigationProp>();
   const [contacts, setContacts] = useState<ContactWithSwipe[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -55,6 +62,10 @@ export const SwipeScreen: React.FC = () => {
 
   const handleOpenSettings = () => {
     Linking.openSettings();
+  };
+
+  const handleBack = () => {
+    navigation.navigate('Summary');
   };
 
   const loadContacts = async () => {
@@ -174,7 +185,13 @@ export const SwipeScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>In Town</Text>
+        <View style={styles.headerRow}>
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color="#4ECDC4" />
+          </TouchableOpacity>
+          <Text style={styles.title}>In Town</Text>
+          <View style={styles.backButton} />
+        </View>
         <Text style={styles.subtitle}>Who would you visit?</Text>
         <Text style={styles.counter}>
           {currentIndex + 1} / {contacts.length}
@@ -256,11 +273,23 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 5,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 32,
     fontWeight: "bold",
     color: "#4ECDC4",
-    marginBottom: 5,
   },
   subtitle: {
     fontSize: 16,
