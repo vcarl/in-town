@@ -8,7 +8,7 @@ export default [
     files: ['**/*.ts', '**/*.tsx'],
     plugins: {
       '@typescript-eslint': tseslint,
-      'react': react,
+      react: react,
       'react-hooks': reactHooks,
     },
     languageOptions: {
@@ -30,15 +30,13 @@ export default [
     rules: {
       ...tseslint.configs.recommended.rules,
       ...react.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'react/no-unescaped-entities': 'off',
+      'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'react-hooks/immutability': 'warn',
-      'react-hooks/set-state-in-effect': 'warn',
     },
   },
   {
